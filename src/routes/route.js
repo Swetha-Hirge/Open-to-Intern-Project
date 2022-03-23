@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const collegeControl  = require("../controller/collageController")
-const internControl  = require("../controller/iternController")
+const collegeControl = require("../controller/collageController")
+const internControl = require("../controller/iternController")
 
 router.post("/colleges", collegeControl.createCollege)
 

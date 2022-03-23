@@ -18,6 +18,7 @@ const collegeSchema = new mongoose.Schema({
     logoLink: {
         type: String,
         required: true,
+        uniqie:true,
         match: [/https?:\/\/(www\.)?[-a-zA-Z0-9@:%.\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%\+.~#?&//=]*)/, 'Enter correct url!']
 
     },

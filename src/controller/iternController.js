@@ -41,16 +41,16 @@ const createIntern = async function (req, res) {
         let deletedCheck = await collageModel.findOne({ name: data.collegeName, isDeleted: true });
         console.log(deletedCheck)
         if (deletedCheck) return res.status(404).send({ status: false, msg: 'Opening is been closed' })
-      
 
-        let finalData = ({ name: data.name, email: data.email, mobile: data.mobile, collegeId: collageDetail._id, isDeleted:collageDetail.isDeleted });
+
+        let finalData = ({ name: data.name, email: data.email, mobile: data.mobile, collegeId: collageDetail._id, isDeleted: collageDetail.isDeleted });
 
         let createData = await internModel.create(finalData)
-        return res.status(201).send({status:true, data: createData })
+        return res.status(201).send({ status: true, data: createData })
     } catch (err) {
         return res.statu(500).send({ Error: err.message });
     }
-    
+
 };
 
 // const createIntern = async function (req, res) {

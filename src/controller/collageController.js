@@ -4,7 +4,7 @@ const internModel = require("../models/internModel")
 
 
 const isValid = function (value) {
-    if (typeof value == undefined || value == null || value ==0) return false
+    if (typeof value == undefined || value == null || value == 0) return false
     if (typeof value === 'string' && value.trim().length === 0) return false
     return true
 }
@@ -23,8 +23,8 @@ const createCollege = async function (req, res) {
         if ((/https?:\/\/(www\.)?[-a-zA-Z0-9@:%.\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%\+.~#?&//=]*)/.test(data.logoLink))) {
             //-----------------------------------------------------------------
             const sentnce = data.fullName
-            let FirstCaptal = convertFirstLetterToUpperCase(sentnce)
-            function convertFirstLetterToUpperCase(sentnce) {
+            let FirstCaptal =convertFirstLetterToUpperCase(sentnce)
+             function convertFirstLetterToUpperCase(sentnce) {
                 var splitStr = sentnce.toLowerCase().split(' ');
                 for (var i = 0; i < splitStr.length; i++) {
                     splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
@@ -35,11 +35,14 @@ const createCollege = async function (req, res) {
             let duplicateName = await collegeModel.findOne({ name: data.name })
             if (duplicateName) return res.status(400).send({ status: false, msg: 'name already exist' })
 
-            let newData = { name: data.name, fullName: FirstCaptal, logoLink: data.logoLink, isDeleted:data.isDeleted}
-            const savedData = await collegeModel.create(newData)
-            return res.status(201).send({ status: true, dat:savedData })
+            let duplicateLink = await collegeModel.findOne({ logoLink: data.logoLink })
+            if (duplicateLink) return res.status(400).send({ status: false, msg: 'logoLink already exist' })
 
-        }else return res.status(400).send({ status: false, msg: "invalid link" })
+            let newData = { name: data.name, fullName: FirstCaptal, logoLink: data.logoLink, isDeleted: data.isDeleted }
+            const savedData = await collegeModel.create(newData)
+            return res.status(201).send({ status: true, data: savedData })
+
+        } else return res.status(400).send({ status: false, msg: "invalid link" })
 
     } catch (err) {
         return res.status(500).send({ ERROR: err.message })
@@ -50,24 +53,26 @@ const createCollege = async function (req, res) {
 // get college detalis......................................
 
 const getDetails = async function (req, res) {
-    try{
-    let data = req.query.collegeName;
-    if(Object.keys(data).length === 0) return res.status(400).send({status:false, msg:'BAD REQUEST'})
+    try {
+        let data = req.query.collegeName;
+        if (Object.keys(data).length === 0) return res.status(400).send({ status: false, msg: 'BAD REQUEST' })
 
-    let lowerData = data.toLowerCase();
-    let collageDetails = await collegeModel.findOne({name:lowerData,isDeleted:false});
-    if (!collageDetails) return res.status(404).send({status:false, msg:'collage name not found'});
+        let lowerData = data.toLowerCase();
+        let collageDetails = await collegeModel.findOne({ name: lowerData, isDeleted: false });
+        if (!collageDetails) return res.status(404).send({ status: false, msg: 'collage name not found' });
 
-     let internDetails= await internModel.find({collegeId:collageDetails._id, isDeleted: false}).select({_id:1,name:1,email:1,mobile:1})
-     if(!internDetails) return res.status(404).send({status:false, msg:'No interns applied'})
+        let internDetails = await internModel.find({ collegeId: collageDetails._id, isDeleted: false }).select({ _id: 1, name: 1, email: 1, mobile: 1 })
 
-    let allDetails = {name:collageDetails.name, fullName:collageDetails.fullName, logoLink:collageDetails.logoLink, interests:internDetails}
-    return res.status(200).send({status:true, data:allDetails})
-    
-    }catch(err){
-        return res.status(500).send({error:err.message})
+        let allDetails = { name: collageDetails.name, fullName: collageDetails.fullName, logoLink: collageDetails.logoLink, interests: internDetails }
+        if (internDetails.length === 0) return res.status(404).send({ status: false, allDetails, msg: 'No interns applied' })
+
+        console.log(interstChek)
+        return res.status(200).send({ status: true, data: allDetails })
+
+    } catch (err) {
+        return res.status(500).send({ error: err.message })
     }
-    
+
 
 }
 
