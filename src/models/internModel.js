@@ -13,14 +13,14 @@ const internSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
-        match: [/^\w+([\.-]?\w+)@\w+([\. -]?\w+)(\.\w{2,3})+$/, 'Please fill a valid email address'],
+        // match: [/^\w+([\.-]?\w+)@\w+([\. -]?\w+)(\.\w{2,3})+$/, 'Please fill a valid email address'],
         unique: true
     },
 
     mobile: {
         type: Number,
         required: true,
-        match: [/^([+]\d{2})?\d{10}$/, "please fill a valid mobile Number"],
+        // match: [/^([+]\d{2})?\d{10}$/, "please fill a valid mobile Number"],
         unique: true
     },
     collegeId: {

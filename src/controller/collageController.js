@@ -6,7 +6,7 @@ const internModel = require("../models/internModel")
 const isValid = function (value) {
     if (typeof value == undefined || value == null || value == 0) return false
     if (typeof value === 'string' && value.trim().length === 0) return false
-    return true
+    return true 
 }
 
 // create college................................................
@@ -23,8 +23,8 @@ const createCollege = async function (req, res) {
         if ((/https?:\/\/(www\.)?[-a-zA-Z0-9@:%.\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%\+.~#?&//=]*)/.test(data.logoLink))) {
             //-----------------------------------------------------------------
             const sentnce = data.fullName
-            let FirstCaptal =convertFirstLetterToUpperCase(sentnce)
-             function convertFirstLetterToUpperCase(sentnce) {
+            let FirstCaptal = convertFirstLetterToUpperCase(sentnce)
+            function convertFirstLetterToUpperCase(sentnce) {
                 var splitStr = sentnce.toLowerCase().split(' ');
                 for (var i = 0; i < splitStr.length; i++) {
                     splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
@@ -55,6 +55,8 @@ const createCollege = async function (req, res) {
 const getDetails = async function (req, res) {
     try {
         let data = req.query.collegeName;
+        
+        if (!isValid(data)) return res.status(400).send({ status: false, msg: ' collage name required' })
         if (Object.keys(data).length === 0) return res.status(400).send({ status: false, msg: 'BAD REQUEST' })
 
         let lowerData = data.toLowerCase();
@@ -66,7 +68,7 @@ const getDetails = async function (req, res) {
         let allDetails = { name: collageDetails.name, fullName: collageDetails.fullName, logoLink: collageDetails.logoLink, interests: internDetails }
         if (internDetails.length === 0) return res.status(404).send({ status: false, allDetails, msg: 'No interns applied' })
 
-        console.log(interstChek)
+        
         return res.status(200).send({ status: true, data: allDetails })
 
     } catch (err) {

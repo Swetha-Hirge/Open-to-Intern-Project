@@ -39,8 +39,7 @@ const createIntern = async function (req, res) {
 
 
         let deletedCheck = await collageModel.findOne({ name: data.collegeName, isDeleted: true });
-        console.log(deletedCheck)
-        if (deletedCheck) return res.status(404).send({ status: false, msg: 'Opening is been closed' })
+       if (deletedCheck) return res.status(404).send({ status: false, msg: 'Opening is been closed' })
 
 
         let finalData = ({ name: data.name, email: data.email, mobile: data.mobile, collegeId: collageDetail._id, isDeleted: collageDetail.isDeleted });
